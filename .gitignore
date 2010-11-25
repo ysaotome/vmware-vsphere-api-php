@@ -1,0 +1,7 @@
+phpunit.xml
+autoload.php
+.project
+.buildpath
+.settings/*
+.externalToolBuilders/*
+samples/*
