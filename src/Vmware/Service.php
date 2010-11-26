@@ -11,11 +11,11 @@
 
 namespace Vmware;
 
-use Vmware\Data\Object\User\SearchResult;
+use Vmware\DataObject\User\SearchResult;
+use Vmware\DataObject\User\Session;
+use Vmware\DataObject\ServiceContent as serviceContent;
+use Vmware\DataObject\Managed\ObjectReference;
 
-use Vmware\Service\Content as serviceContent;
-use Vmware\Managed\Object\Reference;
-use Vmware\Data\Object\User\Session;
  
 class Service {
 	/**
@@ -27,6 +27,7 @@ class Service {
 	 * @var unknown_type
 	 */
 	protected  $_serviceContent;
+	
 	/**
 	 * Constructor
 	 * @param \SoapClient $soapClient
@@ -36,54 +37,96 @@ class Service {
 		$this->init();
 	}
 	
+	/**
+	 * Retrieve ServiceContent
+	 */
 	public function init() {
-		$result = $this->retrieveServiceContent("ServiceInstance");
+		$result = $this->retrieveServiceContent();
 		$this->_serviceContent = new serviceContent((array)$result->returnval);
 	}
 	
-	public function retrieveServiceContent($value) {
-		$soapMessage = array('_this' => $this->_prepareMessage($value,$value));
+	/**
+	 * Retrieves the properties of the service instance. 
+	 * 
+	 * @return array The properties belonging to the service instance, including various object managers.
+	 */
+	public function retrieveServiceContent() {
+		$soapMessage = array('_this' => $this->_prepareMessage("ServiceInstance","ServiceInstance"));
 		$result = $this->getSoapClient()->RetrieveServiceContent($soapMessage);
 		return $result;
 	}
-	
+
 	/**
-	 * Enter description here ...
-	 * 
-	 * @return Vmware\Client
+	 * Log on to the server. This method fails if the user name and password are incorrect, 
+	 * or if the user is valid but has no permissions granted.
+	 *  
+	 * @param string $username The ID of the user who is logging on to the server. 
+	 * @param string $password The password of the user who is logging on to the server. 
+	 * @param string $locale A two-character ISO-639 language ID (like "en")
 	 */
-	public function getSoapClient() {
-		return $this->_soapClient;
-	}
-	
-	/**
-	 * 
-	 * Enter description here ...
-	 * @param string $username
-	 * @param string $password
-	*/
-	public function login($username, $password) {
+	public function login($username, $password, $locale=null) {
 		$soapMessage = array(
 			'_this' => $this->_prepareManagedObjectReference('SessionManager'),
 			'userName' => $username,
 			'password' => $password,
+			'locale' => $locale,
 		);
 		$result = $this->getSoapClient()->Login($soapMessage);
+		
 		return new Session($result->returnval);
 	}
 	
 	/**
+	 * Log on to the server using SSPI pass-through authentication. 
 	 * 
-	 * @param string $reference
-	 * @retur \Vmware\Managed\Object\Reference
+	 * @var string $base64Token The partially formed context returned from InitializeSecurityContext(). 
+	 * @var string $locale A two-character ISO-639 language ID (like "en")
 	 */
-	protected function _prepareManagedObjectReference($reference) {
-		return  $this->_prepareMessage(
-					$this->getServiceContent()->{$reference}()->getType(),
-					$this->getServiceContent()->{$reference}()->getValue()
-				); 	
+	public function loginBySSPI($base64Token, $locale=nul) {
+		$soapMessage = array(
+			'_this' => $this->_prepareManagedObjectReference('SessionManager'),
+			'base64Token' => $base64Token,
+			'locale' => $locale,
+		);
+		$result = $this->getSoapClient()->LoginBySSPI($soapMessage);
+		
+		return new Session($result->returnval);	
 	}
-
+	
+	/**
+	 * Creates a special privileged session that includes the Sessions.
+	 * 
+	 * @var string $extensionKey Key of extension that is logging in. 
+	 * @var string $locale A two-character ISO-639 language ID (like "en")
+	 */
+	public function loginExtensionByCertificate($extensionKey, $locale=nul) {
+		$soapMessage = array(
+			'_this' => $this->_prepareManagedObjectReference('SessionManager'),
+			'extensionKey' => $extensionKey,
+			'locale' => $locale,
+		);
+		$result = $this->getSoapClient()->LoginExtensionByCertificate($soapMessage);
+		
+		return new Session($result->returnval);	
+	}	
+	
+	/**
+	 * Creates a special privileged session that includes the Sessions
+	 * 
+	 * @var string $extensionKey Key of extension that is logging in. 
+	 * @var string $locale A two-character ISO-639 language ID (like "en")
+	 */
+	public function loginExtensionBySubjectName($extensionKey, $locale=nul) {
+		$soapMessage = array(
+			'_this' => $this->_prepareManagedObjectReference('SessionManager'),
+			'extensionKey' => $extensionKey,
+			'locale' => $locale,
+		);
+		$result = $this->getSoapClient()->LoginExtensionBySubjectName($soapMessage);
+		
+		return new Session($result->returnval);	
+	}		
+	
 	/**
 	 * Log out and terminate the current session. 
 	 */
@@ -91,9 +134,67 @@ class Service {
 		$soapMessage = array(
 			'_this' => $this->_prepareManagedObjectReference('SessionManager')
 		);
-		$result = $this->getSoapClient()->Logout($soapMessage);
+		$this->getSoapClient()->Logout($soapMessage);
 	}
+	
+	/**
+	 * Validates that a currently-active session exists with the specified 
+	 * sessionID and userName associated with it
+	 * 
+	 * @param string $sessionID	Session ID to validate. 
+	 * @param string $userName	User name to validate. 
+	 * @return bool
+	 */
+	public function sessionIsActive($sessionID, $userName) {
+		$soapMessage = array(
+			'_this' => $this->_prepareManagedObjectReference('SessionManager'),
+			'sessionID' => $sessionID,
+			'userName'  => $userName,
+		);
+		$result = $this->getSoapClient()->SessionIsActive($soapMessage);
 		
+		return $result->returnval;		
+	}
+	/**
+	 * Sets the session locale. 
+	 * 
+	 * @param string $locale A two-character ISO-639 language ID (like "en") 
+	 */
+	public function setLocale($locale) {
+		$soapMessage = array(
+			'_this' => $this->_prepareManagedObjectReference('SessionManager'),
+			'locale' => $locale,
+		);
+		$result = $this->getSoapClient()->SetLocale($soapMessage);
+	}
+	
+	/**
+	 * Log off and terminate the provided list of sessions. 
+	 * 
+	 * @param string[] $sessionId
+	 * @todo a tester...
+	 */
+	public function terminateSession($sessionId) {
+		$soapMessage = array(
+			'_this' => $this->_prepareManagedObjectReference('SessionManager'),
+			'sessionId' => $sessionId,
+		);
+		$result = $this->getSoapClient()->TerminateSession($soapMessage);		
+	}
+	
+	/**
+	 * Updates the system global message
+	 * 
+	 * @param string $message The message to send. Newline characters may be included. 
+	 */
+	public function updateServiceMessage($message) {
+		$soapMessage = array(
+			'_this' => $this->_prepareManagedObjectReference('SessionManager'),
+			'message' => $message,
+		);
+		$result = $this->getSoapClient()->UpdateServiceMessage($soapMessage);		
+	}
+	
 	/**
 	 * Finds a managed entity based on its location in the inventory.
 	 * @param string $path
@@ -352,16 +453,24 @@ class Service {
 	}
 	
 	/**
-	 * 
-	 * Enter description here ...
+	 * Return ServiceContent Instance
 	 */
 	public function getServiceContent() {
 		return $this->_serviceContent;
 	}
-	
+
 	/**
+	 * Return SoapClient Instance
 	 * 
-	 * Enter description here ...
+	 * @return Vmware\Client
+	 */
+	public function getSoapClient() {
+		return $this->_soapClient;
+	}
+		
+	/**
+	 * Return Formated data
+	 * 
 	 * @param string $type_name
 	 * @param string $data
 	 * @param string $encoding
@@ -370,5 +479,15 @@ class Service {
 		return new \SoapVar($data, $encoding, $type_name); 	
 	}
 	
-	
+	/**
+	 * 
+	 * @param string $reference
+	 * @retur \Vmware\Managed\Object\Reference
+	 */
+	protected function _prepareManagedObjectReference($reference) {
+		return  $this->_prepareMessage(
+					$this->getServiceContent()->{'get'.$reference}()->getType(),
+					$this->getServiceContent()->{'get'.$reference}()->getValue()
+				); 	
+	}	
 }
