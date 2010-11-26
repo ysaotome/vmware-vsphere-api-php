@@ -1,14 +1,30 @@
 <?php
-namespace Vmware\Data\Object;
 
-use Vmware\Data\Object\DynamicData;
+/*
+ * This file is part of the Vmware package.
+ *
+ * (c) Nicolas Fabre <nicolas.fabre@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
+namespace Vmware\DataObject;
+
+use Vmware\DataObject\DynamicData;
+/**
+ * This data object type provides assignment of some role access to a principal
+ * on a specific entity. A ManagedEntity is limited to one permission per principal. 
+ * 
+ * @author nicolasfabre
+ * @see http://www.vmware.com/support/developer/vc-sdk/visdk400pubs/ReferenceGuide/vim.AuthorizationManager.Permission.html
+ */
 class Permission extends DynamicData {
 	/**
 	 * Managed entity the permission is defined on. 
 	 * Left unset when calling setPermissions or resetPermissions, 
 	 * but present for the results of permission queries. 
-	 * @var Vmware\Managed\Object\Reference
+	 * @var Vmware\DataObject\Managed\ObjectReference
 	 */
 	protected $entity;
 	/**
@@ -31,18 +47,4 @@ class Permission extends DynamicData {
 	 * @var boolean
 	 */
 	protected $propagate;
-	
-	public function __get($name) {
-		
-		return 'ns1:'.$this->$name;
-	} 
-	
-	public function __sleep() {
-		echo 'a';exit;
-	}
-	
-public function __invoke($x)
-    {
-        var_dump($x);exit;
-    }
 }

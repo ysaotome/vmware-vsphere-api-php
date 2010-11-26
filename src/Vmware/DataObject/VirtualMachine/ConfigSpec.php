@@ -1,10 +1,22 @@
 <?php
+
+/*
+ * This file is part of the Vmware package.
+ *
+ * (c) Nicolas Fabre <nicolas.fabre@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Vmware\Data\VirtualMachine;
 
-use Vmware\Data\Object\DynamicData;
+use Vmware\DataObject\DynamicData;
 /**
- * The ConfigSpec data object type encapsulates configuration settings when creating or reconfiguring a virtual machine. 
+ * The ConfigSpec data object type encapsulates configuration settings 
+ * when creating or reconfiguring a virtual machine. 
  * To support incremental changes, these properties are all optional. 
+ * 
  * @author Nicolas Fabre <nicolas.fabre@gmail.com>
  * @see http://www.vmware.com/support/developer/vc-sdk/visdk400pubs/ReferenceGuide/vim.vm.ConfigSpec.html
  *
@@ -161,42 +173,42 @@ class ConfigSpec extends DynamicData {
 	protected $cpuHotRemoveEnabled;	
 	/**
 	 * Set of virtual devices being modified by the configuration operation. 
-	 * @var \Vmware\VirtualDevice\ConfigSpec[]
+	 * @var \Vmware\DataObject\VirtualDevice\ConfigSpec[]
 	 */	
 	protected $deviceChange;
 	/**
 	 * Resource limits for CPU. 
-	 * @var \Vmware\Resource\AllocationInfo
+	 * @var \Vmware\DataObject\Resource\AllocationInfo
 	 */	
 	protected $cpuAllocation;
 	/**
 	 * Resource limits for memory. 
-	 * @var \Vmware\Resource\AllocationInfo
+	 * @var \Vmware\DataObject\Resource\AllocationInfo
 	 */
 	protected $memoryAllocation;
 	/**
 	 * Affinity settings for CPU. 
-	 * @var \Vmware\VirtualMachine\AffinityInfo
+	 * @var \Vmware\DataObject\VirtualMachine\AffinityInfo
 	 */		
 	protected $cpuAffinity;
 	/**
 	 * Resource limits for network. 
-	 * @var \Vmware\VirtualMachine\AffinityInfo
+	 * @var \Vmware\DataObject\VirtualMachine\AffinityInfo
 	 */	
 	protected $memoryAffinity;	
 	/**
 	 * Resource limits for network. 
-	 * @var \Vmware\VirtualMachine\NetworkShaperInfo 
+	 * @var \Vmware\DataObject\VirtualMachine\NetworkShaperInfo 
 	 */	
 	protected $networkShaper;	
 	/**
 	 * Specifies the CPU feature compatibility masks. 
-	 * @var \Vmware\VirtualMachine\CpuIdInfoSpec[]
+	 * @var \Vmware\DataObject\VirtualMachine\CpuIdInfoSpec[]
 	 */
 	protected $cpuFeatureMask;
 	/**
 	 * Additional configuration information for the virtual machine
-	 * @var \Vmware\OptionValue[]
+	 * @var \Vmware\DataObject\OptionValue[]
 	 */
 	protected $extraConfig;		
 	/**
@@ -207,17 +219,17 @@ class ConfigSpec extends DynamicData {
 	/**
 	 * Settings that control the boot behavior of the virtual machine. 
 	 * These settings take effect during the next power-on of the virtual machine. 
-	 * @var \Vmware\VirtualMachine\Boot\Options
+	 * @var \Vmware\DataObject\VirtualMachine\Boot\Options
 	 */	
 	protected $bootOptions;
 	/**
      * Configuration of vApp meta-data for a virtual machine 
-     * @var \Vmware\Vm\ConfigSpec
+     * @var \Vmware\DataObject\Vm\ConfigSpec
 	 */
 	protected $vAppConfig;	
 	/**
 	 * Fault Tolerance settings for this virtual machine.
-	 * @var \Vmware\VirtualMachine\FaultTolerance\ConfigInfo
+	 * @var \Vmware\DataObject\VirtualMachine\FaultTolerance\ConfigInfo
 	 */
 	protected $ftInfo;	
 	/**
