@@ -42,6 +42,7 @@ class Service {
 	 */
 	public function init() {
 		$result = $this->retrieveServiceContent();
+		//$this->_serviceContent = $result->returnval;
 		$this->_serviceContent = new serviceContent((array)$result->returnval);
 	}
 	
@@ -269,7 +270,7 @@ class Service {
 	 */
 	public function createUser($user) {
 		$soapMessage = array(
-			'_this' => $this->_prepareManagedObjectReference('HostLocalAccountManager'),
+			'_this' => $this->_prepareManagedObjectReference('AccountManager'),
 			'user' => $this->_prepareMessage('HostAccountSpec',$user,SOAP_ENC_OBJECT)
 		);
 		$this->getSoapClient()->CreateUser($soapMessage);
@@ -284,7 +285,7 @@ class Service {
 	 */
 	public function updateUser($user) {
 		$soapMessage = array(
-			'_this' => $this->_prepareManagedObjectReference('HostLocalAccountManager'),
+			'_this' => $this->_prepareManagedObjectReference('AccountManager'),
 			'user' => $this->_prepareMessage('HostAccountSpec',$user,SOAP_ENC_OBJECT)
 		);
 		$this->getSoapClient()->UpdateUser($soapMessage);
@@ -299,7 +300,7 @@ class Service {
 	 */
 	public function removeUser($userName) {
 		$soapMessage = array(
-			'_this' => $this->_prepareManagedObjectReference('HostLocalAccountManager'),
+			'_this' => $this->_prepareManagedObjectReference('AccountManager'),
 			'userName' => $userName
 		);
 		$this->getSoapClient()->RemoveUser($soapMessage);
@@ -315,7 +316,7 @@ class Service {
 	 */
 	public function assignUserToGroup($user, $group) {
 		$soapMessage = array(
-			'_this' => $this->_prepareManagedObjectReference('HostLocalAccountManager'),
+			'_this' => $this->_prepareManagedObjectReference('AccountManager'),
 			'user' 	=> $user,
 			'group' => $group
 		);
@@ -332,7 +333,7 @@ class Service {
 	 */
 	public function createGroup($group) {
 		$soapMessage = array(
-			'_this' => $this->_prepareManagedObjectReference('HostLocalAccountManager'),
+			'_this' => $this->_prepareManagedObjectReference('AccountManager'),
 			'group' => $this->_prepareMessage('HostAccountSpec',$group,SOAP_ENC_OBJECT)
 		);
 		$this->getSoapClient()->CreateGroup($soapMessage);
@@ -347,7 +348,7 @@ class Service {
 	 */
 	public function removeGroup($groupName) {
 		$soapMessage = array(
-			'_this' => $this->_prepareManagedObjectReference('HostLocalAccountManager'),
+			'_this' => $this->_prepareManagedObjectReference('AccountManager'),
 			'groupName' => $groupName
 		);
 		$this->getSoapClient()->RemoveGroup($soapMessage);
@@ -363,7 +364,7 @@ class Service {
 	 */
 	public function unassignUserFromGroup($user, $group) {
 		$soapMessage = array(
-			'_this' => $this->_prepareManagedObjectReference('HostLocalAccountManager'),
+			'_this' => $this->_prepareManagedObjectReference('AccountManager'),
 			'user' 	=> $user,
 			'group' => $group
 		);
@@ -377,22 +378,52 @@ class Service {
 	 * Defines one or more permission rules on an entity or updates rules 
 	 * if already present for the given user or group on the entity. 
 	 * 
-	 * @param Reference $entity
+	 * @param ObjectReference $entity
 	 * @param array $permissions
 	 */
-	public function setEntityPermissions(Reference $entity, $permissions ) {
-		$permissions = array(
-			'entity' => $entity,
-			'principal' => 'userName',
-		);
+	public function setEntityPermissions( $entity,  $permissions ) {
 		$soapMessage = array(
 			'_this' => $this->_prepareManagedObjectReference('AuthorizationManager'),
-			'entity' => $this->_prepareMessage('ManagedEntity',$entity,SOAP_ENC_OBJECT),
-		    'permission' => $this->_prepareMessage('Permission',$permissions,SOAP_ENC_OBJECT)
+			'entity' => $this->_prepareMessage($entity->getType(),$entity->getValue()),	
+		    'permission' => $this->_prepareMessage('Permission',$permissions,SOAP_ENC_OBJECT),
 		);
 		$result = $this->getSoapClient()->SetEntityPermissions($soapMessage);
 			
 		return $this;
+	}
+	
+	/**
+	 * Finds all permissions defined in the system. 
+	 * The result is restricted to the managed entities visible to the user making the call. 
+	 * 
+	 * @return array
+	 */
+	public function retrieveAllPermissions() {
+		$soapMessage = array(
+			'_this' => $this->_prepareManagedObjectReference('AuthorizationManager'),
+		);
+		$result = $this->getSoapClient()->RetrieveAllPermissions($soapMessage);
+			
+		return $result;	
+	}
+	
+	/**
+	 * Gets permissions defined on or effective on a managed entity
+	 * 
+	 * @param Vmware\DataObject\Managed\ObjectReference  $entity
+	 * @param bool $inherited
+	 * 
+	 * @return array;
+	 */
+	public function retrieveEntityPermissions($entity,$inherited = false) {
+		$soapMessage = array(
+			'_this' => $this->_prepareManagedObjectReference('AuthorizationManager'),
+			'entity' => $this->_prepareManagedObjectReference($entity),
+			'inherited' 	 => new \SoapVar($inherited,XSD_BOOLEAN),
+		);
+		$result = $this->getSoapClient()->RetrieveEntityPermissions($soapMessage);
+			
+		return $result;		
 	}
 	
 	/**
@@ -444,12 +475,12 @@ class Service {
 		);
 		$result = $this->getSoapClient()->RetrieveUserGroups($soapMessage);
 		// TODO en cours de reflexion
-		$return = array();
+		/*$return = array();
 		foreach ($result->returnval as $_row) {
-			$return[] = new SearchResult($_row);	
-		}
-		
-		return $return;	
+			//$return[] = new SearchResult($_row);	
+		}*/
+		// We use SoapClient 'classmap'
+		return $result;	
 	}
 	
 	/**
