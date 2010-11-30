@@ -17,12 +17,14 @@ abstract class AbstractObject {
 	 * 
 	 * @param \stdClass $data
 	 */
-	public function __construct(\stdClass $data) {
-		$reflection = new \ReflectionObject($data);  
-		
-		$properties = $reflection->getProperties();
-		foreach ($properties as $_property) {
-			$this->{$_property->getName()} = $_property->getValue($data);
+	public function __construct($data = null) {
+		if(isset($data)) {
+			$reflection = new \ReflectionObject($data);  
+			
+			$properties = $reflection->getProperties();
+			foreach ($properties as $_property) {
+				$this->{$_property->getName()} = $_property->getValue($data);
+			}
 		}
 	}
 	
@@ -50,4 +52,6 @@ abstract class AbstractObject {
 				throw new \BadMethodCallException('Invalid Method :'.$name);	
 		}
 	}
+	
+
 } 
