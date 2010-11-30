@@ -42,8 +42,7 @@ class Service {
 	 */
 	public function init() {
 		$result = $this->retrieveServiceContent();
-		//$this->_serviceContent = $result->returnval;
-		$this->_serviceContent = new serviceContent((array)$result->returnval);
+		$this->_serviceContent = $result->returnval;
 	}
 	
 	/**

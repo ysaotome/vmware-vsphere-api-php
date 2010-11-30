@@ -27,17 +27,17 @@ class ObjectReference extends AbstractObject {
 	 * The specific instance of Managed Object this ManagedObjectReference refers to. 
 	 * @var string
 	 */
-	//protected $_;
 	protected $value;
 	
-	
-/*	public function getValue() {
-		return $this->_;
-	}*/
-	
-	public function __construct(array $data) {
-		$this->type = $data['type'];
-		$this->value= $data['_'];
+	/**
+	 * Re-map $_ to $value
+	 * 
+	 * @param unknown_type $name
+	 * @param unknown_type $value
+	 */
+	public function __set($name,$value) {
+		if($name == '_') {
+			$this->value = $value;
+		}else $this->$name = $value;
 	}
-	
 }
