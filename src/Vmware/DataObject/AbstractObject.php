@@ -28,6 +28,14 @@ abstract class AbstractObject {
 		}
 	}
 	
+	/**
+	 * 
+	 * 
+	 * @param string $name
+	 * @param array $arguments
+	 * @throws \InvalidArgumentException
+	 * @throws \BadMethodCallException
+	 */
 	public function __call($name,array $arguments) {
 		// TODO a rendre plus hype
 		$prefix = substr($name, 0,3);
