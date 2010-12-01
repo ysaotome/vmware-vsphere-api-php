@@ -6,3 +6,4 @@ autoload.php
 .externalToolBuilders/*
 samples/*
 src/vendor/doctrine-common/*
+tests/coverages/*
