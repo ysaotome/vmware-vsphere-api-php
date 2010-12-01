@@ -195,11 +195,4 @@ class ServiceContent extends DynamicData {
 	 */		
 	protected $localizationManager;
 	
-	public function __construct($serviceContent){
-		if(is_array($serviceContent)) {
-			foreach($serviceContent as $_key => $_property) {
-				$this->$_key = new $_property;	
-			}
-		}
-	}	
 }
