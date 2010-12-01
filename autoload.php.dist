@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__.'/src/vendor/Symfony/Component/HttpFoundation/UniversalClassLoader.php';
+require_once __DIR__.'/src/vendor/symfony/src/Symfony/Component/HttpFoundation/UniversalClassLoader.php';
 
 use Symfony\Component\HttpFoundation\UniversalClassLoader;
 

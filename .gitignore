@@ -5,3 +5,4 @@ autoload.php
 .settings/*
 .externalToolBuilders/*
 samples/*
+src/vendor/doctrine-common/*

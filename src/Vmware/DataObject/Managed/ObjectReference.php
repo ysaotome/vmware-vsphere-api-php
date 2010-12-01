@@ -16,6 +16,7 @@ use Vmware\DataObject\AbstractObject;
  * This class is used to refer to a server-side Managed Object. 
  * @author nicolasfabre
  * @see http://www.vmware.com/support/developer/vc-sdk/visdk400pubs/ReferenceGuide/vmodl.ManagedObjectReference.html
+ * 
  */
 class ObjectReference extends AbstractObject {
 	/**
