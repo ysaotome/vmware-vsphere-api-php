@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Vmware\Data\VirtualMachine;
+namespace Vmware\DataObject\VirtualMachine;
 
 use Vmware\DataObject\DynamicData;
 /**

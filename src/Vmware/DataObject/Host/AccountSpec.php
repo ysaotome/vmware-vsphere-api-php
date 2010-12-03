@@ -17,6 +17,7 @@ use Vmware\DataObject\DynamicData;
  * This data object type contains common parameters for local account creation.
  * @author nicolasfabre
  * @see http://www.vmware.com/support/developer/vc-sdk/visdk400pubs/ReferenceGuide/vim.host.LocalAccountManager.AccountSpecification.html
+ * @ClassMap(soap="HostAccountSpec")
  */
 class AccountSpec extends DynamicData {
 	/**

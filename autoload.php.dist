@@ -6,7 +6,8 @@ use Symfony\Component\HttpFoundation\UniversalClassLoader;
 
 $loader = new UniversalClassLoader();
 $loader->registerNamespaces(array(
-    'Symfony'                        => __DIR__.'/src/vendor',
+    'Symfony'                        => __DIR__.'/src/vendor/symfony/src/',
+    'Doctrine'                        => __DIR__.'/src/vendor/doctrine-common/lib/',
     'Vmware'                        => __DIR__.'/src',
 ));
 
