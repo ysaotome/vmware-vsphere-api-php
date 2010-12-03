@@ -32,9 +32,12 @@ class Service {
 	 * Constructor
 	 * @param \SoapClient $soapClient
 	 */
-	public function __construct(\SoapClient $soapClient) {
+	public function __construct(\SoapClient $soapClient,$autoInit=true) {
 		$this->_soapClient = $soapClient;
-		$this->init();
+		
+		if(true === $autoInit) {
+			$this->init();
+		}
 	}
 	
 	/**
