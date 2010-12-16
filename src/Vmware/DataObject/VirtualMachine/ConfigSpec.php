@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Vmware\Data\VirtualMachine;
+namespace Vmware\DataObject\VirtualMachine;
 
 use Vmware\DataObject\DynamicData;
 /**
@@ -219,7 +219,7 @@ class ConfigSpec extends DynamicData {
 	/**
 	 * Settings that control the boot behavior of the virtual machine. 
 	 * These settings take effect during the next power-on of the virtual machine. 
-	 * @var \Vmware\DataObject\VirtualMachine\Boot\Options
+	 * @var \Vmware\DataObject\VirtualMachine\BootOptions
 	 */	
 	protected $bootOptions;
 	/**
