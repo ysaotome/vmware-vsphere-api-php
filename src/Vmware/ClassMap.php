@@ -18,41 +18,32 @@ namespace Vmware;
  *
  */
 class ClassMap {
+	const NS_PREFIX = '\Vmware\DataObject\\';
+	const DATA_OBJECT_DIR = '/DataObject/';
+	
+	protected static $classMap = null;
 	
 	/**
-	 * 
-	 * Enter description here ...
 	 * 
 	 * @return array
 	 */
 	public static function soapMap () {
-		$reader = new \Doctrine\Common\Annotations\AnnotationReader(
-		    new \Doctrine\Common\Cache\ArrayCache(),
-		    new \Doctrine\Common\Annotations\Parser()
-		);
-		
-		$reader->setAutoloadAnnotations(true);
-		$reader->setDefaultAnnotationNamespace('Vmware\\Annotations\\');
-
-		$return = array();
-		$srcDir = __DIR__.'/DataObject/';
-		$prefix = '\Vmware\DataObject\\';
-		
-		foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($srcDir, \FilesystemIterator::SKIP_DOTS)) as $file) {
-			if (!$file->isFile() || '.php' !== substr($file->getFilename(), -4)) {
-                continue;
-            }
-			$namespace = $prefix.str_replace(array($srcDir,'/','.php'), array('','\\',''), $file->getPathname());
-			
-			$reflClass = new \ReflectionClass($namespace);
-			
-			$classAnnotations = $reader->getClassAnnotations($reflClass);
-			foreach ($classAnnotations as $object) {
-				$return[$object->soap] = $namespace;	
+		if(is_null(self::$classMap)) {
+			$return = array();
+			$srcDir = __DIR__.self::DATA_OBJECT_DIR;
+			foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($srcDir, \FilesystemIterator::SKIP_DOTS)) as $file) {
+				if (!$file->isFile() || '.php' !== substr($file->getFilename(), -4)) {
+	                continue;
+	            }
+				$tmp = str_replace(array($srcDir,'.php'), '', $file->getPathname());
+				$soapClass = str_replace('/', '', $tmp);
+				$namespace = str_replace('/','\\',self::NS_PREFIX.$tmp);
+				$return[$soapClass] = $namespace;	
 			}
+			self::$classMap = $return;
 		}
 		
-		return $return;
+		return self::$classMap;
 	}
 	
 }

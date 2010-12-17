@@ -17,18 +17,47 @@ use Vmware\ClassMap;
 class ClassMapTest  extends \PHPUnit_Framework_TestCase {
 	
 	public function testSoapMapReturn() {
-		$classMapExpected = array(
-			'HostAccountSpec'  => 'Vmware\DataObject\Host\AccountSpec',
-			'Permission' 	   => 'Vmware\DataObject\Permission',
-			'UserSearchResult' => 'Vmware\DataObject\User\SearchResult',
-			'ManagedObjectReference' 	=> 'Vmware\DataObject\Managed\ObjectReference',
-			'AboutInfo' 				=> 'Vmware\DataObject\AboutInfo',
-			'ServiceContent' 			=> 'Vmware\DataObject\ServiceContent',
-		);
-		
 		$return = ClassMap::soapMap();
-		var_dump($return);
 		$this->assertType('array', $return,'classMap::soapMap doesnt return array');
 	}
 	
+	/**
+     * @dataProvider keyProvider
+     */
+	public function testSoapMapKeyReturn($key) {
+		$return = ClassMap::soapMap();
+		$this->assertArrayHasKey($key, $return,'classMap::soapMap doesnt map correctly');	
+	}
+	
+	/**
+     * @dataProvider valueProvider
+     */
+	public function testSoapMapValueReturn($value) {
+		$return = ClassMap::soapMap();
+		$this->assertTrue(in_array($value,$return),'classMap::soapMap doesnt map correctly');	
+	}	
+	
+	public static function keyProvider() {
+		$classMapKeyExpected = array(
+			'HostAccountSpec' ,
+			'Permission' 	,
+			'UserSearchResult',
+			'ManagedObjectReference' ,
+			'AboutInfo' 			,
+			'ServiceContent',
+		);
+		return array($classMapKeyExpected);
+	}
+	
+	public static function valueProvider() {
+		$classMapValueExpected = array(
+				'\Vmware\DataObject\Host\AccountSpec',
+				'\Vmware\DataObject\Permission',
+				'\Vmware\DataObject\User\SearchResult',
+				'\Vmware\DataObject\Managed\ObjectReference',
+				'\Vmware\DataObject\AboutInfo',
+				'\Vmware\DataObject\ServiceContent',
+			);
+	return array($classMapValueExpected);
+	}		
 }
