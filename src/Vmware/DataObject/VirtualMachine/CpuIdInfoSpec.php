@@ -20,7 +20,7 @@ use \Vmware\DataObject\ArrayUpdateSpec;
  */
 class CpuIdInfoSpec extends ArrayUpdateSpec {
 	/**
-	 * @var \Vmware\DataObject\HostCpuIdInfo
+	 * @var \Vmware\DataObject\Host\CpuIdInfo
 	 */
 	protected $info;
 }
