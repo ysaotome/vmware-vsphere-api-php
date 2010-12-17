@@ -42,4 +42,23 @@ class TraversalSpec extends SelectionSpec {
 	 * @var array
 	 */
 	protected $selectSet = array();	
+	
+	/*public function __construct($type, $path, $skip, $selectSet, $dynamicType, $dynamicProperty, $name) {
+		
+	}*/
+	
+	public function addSelectSet($selectSet) {
+		array_push($this->selectSet, $selectSet);
+		return $this;
+	}
+	 
+	public function offsetSetSelectSet($index,$newval) {
+		$this->selectSet[$index] = $newval;
+		return $this;
+	}
+	
+	public function offsetGetSelectSet($index) {
+		return $this->selectSet[$index];	
+	}
+
 }

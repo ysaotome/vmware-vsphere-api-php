@@ -21,6 +21,8 @@ class ClassMap {
 	const NS_PREFIX = '\Vmware\DataObject\\';
 	const DATA_OBJECT_DIR = '/DataObject/';
 	
+	protected static $_exclude = array('User\Session','DynamicData');
+	
 	protected static $classMap = null;
 	
 	/**
@@ -38,7 +40,9 @@ class ClassMap {
 				$tmp = str_replace(array($srcDir,'.php'), '', $file->getPathname());
 				$soapClass = str_replace('/', '', $tmp);
 				$namespace = str_replace('/','\\',self::NS_PREFIX.$tmp);
-				$return[$soapClass] = $namespace;	
+				if(in_array(str_replace(self::NS_PREFIX,'',$namespace),self::$_exclude) === false) {
+					$return[$soapClass] = $namespace;	
+				}
 			}
 			self::$classMap = $return;
 		}

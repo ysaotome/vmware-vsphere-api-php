@@ -56,6 +56,10 @@ abstract class AbstractObject {
 			case 'get' :
 				return $this->{$property};
 				break;
+			case 'add' :
+				array_push($this->{$property},$arguments[0]);
+				return $this;
+				break;
 			default:
 				throw new \BadMethodCallException('Invalid Method :'.$name);	
 		}

@@ -58,6 +58,50 @@ class Service {
 		$result = $this->getSoapClient()->RetrieveServiceContent($soapMessage);
 		return $result;
 	}
+	
+	
+	/**
+	 * Returns the current time on the server. 
+	 * 
+	 * @return dateTime
+	 */
+	public function currentTime() {
+		$soapMessage = array(
+			'_this' => $this->_prepareManagedObjectServiceInstance(),
+		);	
+		$result = $this->getSoapClient()->CurrentTime($soapMessage);
+		return $result->returnval;		
+	}
+	
+	/**
+	 * Investigates the general VMotion compatibility of a virtual machine with a set of hosts.
+	 */
+	public function queryVMotionCompatibility() {
+		throw new \Exception('Deprecated. As of vSphere API 4.0, use QueryVMotionCompatibilityEx_Task instead.');
+	}
+	
+	//
+	/**
+	 * Component information for bundled products 
+	 * @notwork
+	 */
+	public function retrieveProductComponents() {
+		$soapMessage = array(
+			'_this' => $this->_prepareManagedObjectServiceInstance(),
+		);	
+		$result = $this->getSoapClient()->RetrieveProductComponents($soapMessage);
+		return $result;
+	}
+	
+	/**
+	 * Checks the validity of a set of proposed migrations.
+	 * @throws \Exception
+	 * @todo Support multi version ?
+	 */
+	public function validateMigration() {
+		throw new \Exception('Deprecated. As of vSphere API 4.0, use VirtualMachineProvisioningChecker instead.');	
+	}
+	
 
 	/**
 	 * Log on to the server. This method fails if the user name and password are incorrect, 
@@ -441,10 +485,10 @@ class Service {
 		$soapMessage = array(
 			'_this' => $this->_prepareManagedObjectReference('Folder'),
 			'config' => $this->_prepareMessage('VirtualMachineConfigSpec',$config,SOAP_ENC_OBJECT),
-		    'pool' => $this->_prepareMessage('ResourcePool',$pool,SOAP_ENC_OBJECT),
-		    'host' => $this->_prepareMessage('HostSystem',$host,SOAP_ENC_OBJECT),
+		    'pool' => $this->_prepareMessage($pool->getType(),$pool->getValue()),	
+		    'host' => $this->_prepareMessage($host->getType(),$host->getValue()),	
 		);
-		$result = $this->getSoapClient()->SetEntityPermissions($soapMessage);
+		$result = $this->getSoapClient()->createVM_Task($soapMessage);
 			
 		return $result;
 	}
@@ -476,14 +520,23 @@ class Service {
 		    'findGroups' 	 => new \SoapVar($findGroups,XSD_BOOLEAN)
 		);
 		$result = $this->getSoapClient()->RetrieveUserGroups($soapMessage);
-		// TODO en cours de reflexion
-		/*$return = array();
-		foreach ($result->returnval as $_row) {
-			//$return[] = new SearchResult($_row);	
-		}*/
 		// We use SoapClient 'classmap'
 		return $result;	
 	}
+	
+	/**
+	 * Retrieves the specified properties of the specified managed objects. 
+	 */
+	public function retrieveProperties($specSet) {
+		$soapMessage = array(
+			'_this' => $this->_prepareManagedObjectReference('PropertyCollector'),
+			'specSet'	=> $this->_prepareMessage('PropertyFilterSpec',$specSet,SOAP_ENC_OBJECT),
+		);	
+		$result = $this->getSoapClient()->RetrieveProperties($soapMessage);
+		// We use SoapClient 'classmap'
+		return $result;		
+	}
+
 	
 	/**
 	 * Return ServiceContent Instance
@@ -523,4 +576,8 @@ class Service {
 					$this->getServiceContent()->{'get'.$reference}()->getValue()
 				); 	
 	}	
+	
+	protected function _prepareManagedObjectServiceInstance() {
+		return $this->_prepareMessage("ServiceInstance","ServiceInstance");	
+	}
 }

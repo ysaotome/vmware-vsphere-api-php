@@ -23,19 +23,18 @@ use Vmware\DataObject\DynamicData;
  * @see http://www.vmware.com/support/developer/vc-sdk/visdk400pubs/ReferenceGuide/vmodl.query.PropertyCollector.FilterSpec.html
  */
 class FilterSpec extends DynamicData {
+	/**
+	 * Set of properties to include in the filter, specified for each object type. 
+	 * @var unknown_type
+	 */
+	protected $propSet = array();
 	
 	/**
 	 * Set of specifications that determine the objects to filter. 
 	 * @var unknown_type
 	 */
-	protected $objectSet;
-	
-	/**
-	 * Set of properties to include in the filter, specified for each object type. 
-	 * @var unknown_type
-	 */
-	protected $propSet;
-	
+	protected $objectSet = array();
+		
 	/**
 	 * Control how to report missing objects during filter creation. 
 	 * @var boolean
