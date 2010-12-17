@@ -18,7 +18,7 @@ use \Vmware\DataObject\DynamicData;
  * @author nicolasfabre
  * @see http://www.vmware.com/support/developer/vc-sdk/visdk400pubs/ReferenceGuide/vim.vm.NetworkShaperInfo.html
  */
-class AffinityInfo extends DynamicData {
+class NetworkShaperInfo extends DynamicData {
 	/**
 	 * Is the shaper enabled? 
 	 * @var boolean

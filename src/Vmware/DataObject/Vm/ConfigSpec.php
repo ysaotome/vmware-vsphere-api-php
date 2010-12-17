@@ -11,9 +11,9 @@
 
 namespace Vmware\DataObject\Vm;
 
-use Vmware\DataObject\VApp\PropertySpec;
-use Vmware\DataObject\VApp\OvfSectionSpec;
-use \Vmware\DataObjectVApp\PropertySpec;
+use \Vmware\DataObject\VApp\PropertySpec;
+use \Vmware\DataObject\VApp\OvfSectionSpec;
+use \Vmware\DataObject\VApp\ProductSpec;
 use \Vmware\DataObject\DynamicData;
 
 /**
@@ -67,7 +67,7 @@ class ConfigSpec extends DynamicData {
 	/**
 	 * @param ProductSpec $product
 	 */
-	public function addProduct(PropertySpec $product) {
+	public function addProduct(ProductSpec $product) {
 		array_push($this->product,$product);
 		return $this;
 	}
