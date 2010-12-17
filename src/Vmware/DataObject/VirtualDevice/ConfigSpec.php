@@ -21,13 +21,37 @@ use Vmware\DataObject\DynamicData;
  */
 class ConfigSpec extends DynamicData {
 	/**
+	 * Specifies the creation of the device backing; for example, the creation of a virtual disk or floppy image file. 
+	 */
+	const VIRTUAL_DEVICE_CONFIG_SPEC_FILE_OPERATION_CREATE = 'create';
+	/**
+	 * Specifies the destruction of a device backing. 
+	 */
+	const VIRTUAL_DEVICE_CONFIG_SPEC_FILE_OPERATION_DESTROY = 'destroy';
+	/**
+	 * Specifies the deletion of the existing backing for a virtual device and the creation of a new backing. 
+	 */
+	const VIRTUAL_DEVICE_CONFIG_SPEC_FILE_OPERATION_REPLACE = 'replace';
+	/**
+	 * Specifies the addition of a virtual device to the configuration. 
+	 */
+	const VIRTUAL_DEVICE_CONFIG_SPE_COPERATION_ADD = 'add';
+	/**
+	 * Specifies changes to the virtual device specification. 
+	 */
+	const VIRTUAL_DEVICE_CONFIG_SPE_COPERATION_EDIT = 'edit';
+	/**
+	 * Specifies the removal of a virtual device. 
+	 */
+	const VIRTUAL_DEVICE_CONFIG_SPE_COPERATION_REMOVE = 'remove';
+	/**
 	 * Type of operation being performed on the specified virtual device. 
-	 * @var \Vmware\DataObject\VirtualDevice\ConfigSpec\Operation
+	 * @var string
 	 */	
 	protected $operation;	
 	/**
 	 * Type of operation being performed on the backing of the specified virtual device.
-	 * @var \Vmware\DataObject\VirtualDevice\ConfigSpec\FileOperation
+	 * @var string
 	 */
 	protected $fileOperation;	
 	/**
