@@ -41,4 +41,13 @@ class ObjectReference extends AbstractObject {
 			$this->value = $value;
 		}else $this->$name = $value;
 	}
+	
+	public function toXMl($dom,$parent=null) {
+		$element = $dom->createElement('type',$this->type);
+		$parent->appendChild($element);
+		
+		$element = $dom->createElement('value',$this->value);
+		$parent->appendChild($element);
+		
+	}
 }

@@ -31,7 +31,7 @@ class FilterSpec extends DynamicData {
 	
 	/**
 	 * Set of specifications that determine the objects to filter. 
-	 * @var unknown_type
+	 * @var \Vmware\DataObject\ObjectSpec
 	 */
 	protected $objectSet = array();
 		
@@ -41,5 +41,21 @@ class FilterSpec extends DynamicData {
 	 * @since 4.1
 	 */
 	protected $reportMissingObjectsInResults;
-
+	
+	public function toXMl($dom,$parent=null) {
+		if($parent===null) {
+			$parent = $dom->createElement('ns1:specSet');
+			//$parent->setAttribute('type', 'PropertyFilterSpec');
+			$dom->appendChild($parent);
+		}
+		$element = $dom->createElement('ns1:propSet');
+		//$element->setAttribute('type', 'PropertySpec');
+		$this->propSet->toXml($dom,$element);
+		$parent->appendChild($element);
+		$element = $dom->createElement('ns1:objectSet');
+		//$element->setAttribute('type', 'ObjectSpec');
+		$this->objectSet->toXml($dom,$element);
+		$parent->appendChild($element);
+		//return $element;
+	}
 }

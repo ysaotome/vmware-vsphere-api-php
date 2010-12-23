@@ -255,6 +255,16 @@ class Service {
 		return $result;	
 	}
 	
+	public function findByDnsName($dnsName,$datacenter=null) {
+			$soapMessage = array(
+			'_this' => $this->_prepareManagedObjectReference('SearchIndex'),
+			'datacenter' => $datacenter,
+			'dnsName' => $dnsName,
+			'vmSearch' => true,
+		);
+		$result = $this->getSoapClient()->FindByDnsName($soapMessage);
+		return $result;	
+	}	
 	/**
 	 * Finds a virtual machine by its location on a datastore. 
 	 * 
@@ -299,7 +309,7 @@ class Service {
 	 * @param array $specSet
 	 * @param Vmware\Data\Object\RetrieveOptions $options
 	 */
-	public function retrievePropertiesEx($specSet,$options) {
+	/*public function retrievePropertiesEx($specSet,$options) {
 		$soapMessage = array(
 			'_this' => $this->_prepareManagedObjectReference('PropertyCollector'),
 			'specSet' => $specSet,
@@ -307,7 +317,7 @@ class Service {
 		);
 		$result = $this->getSoapClient()->RetrievePropertiesEx($soapMessage);
 		return $result;			
-	}
+	}*/
 	
 	/**
 	 * Creates a local user account
@@ -529,14 +539,13 @@ class Service {
 	 */
 	public function retrieveProperties($specSet) {
 		$soapMessage = array(
-			'_this' => $this->_prepareManagedObjectReference('PropertyCollector'),
-			'specSet'	=> $this->_prepareMessage('PropertyFilterSpec',$specSet,SOAP_ENC_OBJECT),
+			'_this'	  => $this->_prepareManagedObjectReference('PropertyCollector'),
+ 			'specSet' => $this->_prepareMessage(null,str_replace('<?xml version="1.0"?>', '',$specSet),XSD_ANYXML),
 		);	
 		$result = $this->getSoapClient()->RetrieveProperties($soapMessage);
-		// We use SoapClient 'classmap'
+		
 		return $result;		
 	}
-
 	
 	/**
 	 * Return ServiceContent Instance

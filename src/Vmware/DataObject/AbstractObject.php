@@ -65,5 +65,6 @@ abstract class AbstractObject {
 		}
 	}
 	
+	//public function toXMl() {
 
 } 

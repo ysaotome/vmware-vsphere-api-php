@@ -41,4 +41,15 @@ class ObjectSpec extends DynamicData {
 	 * @var \Vmware\DataObject\SelectionSpec
 	 */
 	protected $selectSet;
+	
+	public function toXMl($dom,$parent=null) {
+		$element = $dom->createElement('ns1:obj',$this->obj->getValue());
+		$element->setAttribute('type', $this->obj->getType());
+		//$this->obj->toXml($dom,$element);
+		$parent->appendChild($element);
+		
+		$element = $dom->createElement('skip',$this->skip);
+		//$element->setAttribute('type', 'boolean');
+		//$parent->appendChild($element);
+	}
 }

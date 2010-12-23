@@ -42,4 +42,17 @@ class PropertySpec extends SelectionSpec {
 	 * @var string
 	 */
 	protected $pathSet;
+	
+	
+	public function toXMl($dom,$parent=null) {
+		$element = $dom->createElement('ns1:type',$this->type);
+		$parent->appendChild($element);
+		$element = $dom->createElement('all',$this->all);
+		//$parent->appendChild($element);
+		foreach ($this->pathSet as $_pathSet) {
+			$element = $dom->createElement('ns1:pathSet',$_pathSet);
+			$parent->appendChild($element);
+		}
+		return $element;
+	}
 }
